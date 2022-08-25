@@ -62,17 +62,27 @@ data class BackgroundsDefinition(
   val secondary: BackgroundDefinition?
 )
 
-data class DokiBuildJetbrainsThemeDefinition(
-  val id: String,
+interface HasId {
+  val id: String
+}
+
+data class JetbrainsAppDefinition(
+  override val id: String,
   val editorScheme: Map<String, Any>,
   val overrides: Overrides?,
   val backgrounds: BackgroundsDefinition?,
   val ui: Map<String, Any>,
   val uiBase: String?,
   val icons: Map<String, Any>
-)
+) : HasId
 
-data class DokiBuildMasterThemeDefinition(
+data class IconsAppDefinition(
+  override val id: String,
+  val overrides: Map<String, Any>,
+  val colors: Map<String, String>,
+) : HasId
+
+data class MasterThemeDefinition(
   val id: String,
   val name: String,
   val displayName: String?,
