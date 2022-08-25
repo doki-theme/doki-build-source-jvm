@@ -85,9 +85,9 @@ data class IconsAppDefinition(
 data class MasterThemeDefinition(
   val id: String,
   val name: String,
-  val displayName: String?,
+  val displayName: String,
   val dark: Boolean,
-  val author: String?,
+  val author: String,
   val group: String,
   val product: String?,
   val stickers: BuildStickers,
