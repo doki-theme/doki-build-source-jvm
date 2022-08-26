@@ -1,14 +1,15 @@
 package io.unthrottled.doki.build.jvm.tools
 
 import com.google.gson.GsonBuilder
+import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
 import io.unthrottled.doki.build.jvm.models.HasId
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
-import io.unthrottled.doki.build.jvm.models.ThemeTemplateDefinition
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.Optional
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -19,35 +20,96 @@ enum class DokiProduct(
   JETBRAINS_THEME("jetbrains", "JetBrains"), ICONS("icons", "Icons");
 }
 
+enum class ConstructableTypes(val serializedName: String) {
+  LookAndFeel("LAF"), Color("COLOR");
+}
+
+class ConstructableAssetSupplier(
+  private val assetTypeToAssetTemplate: Map<String, Map<String, AssetTemplateDefinition>>
+) {
+
+  fun getConstructableAsset(templateType: ConstructableTypes): Optional<ConstructableAsset> =
+    Optional.ofNullable(assetTypeToAssetTemplate[templateType.serializedName])
+      .map {
+        ConstructableAsset(
+          templateType,
+          it
+        )
+      }
+}
+
+object BuildTools {
+  fun <T, R> resolveTemplateWithCombini(
+    childTemplate: T,
+    templateNameToTemplate: Map<String, T>,
+    attributeResolver: (T) -> R,
+    parentResolver: (T) -> String?,
+    combiniFunction: (R, R) -> R,
+  ): R {
+    val parentKey = parentResolver(childTemplate)
+    return if (parentKey == null) {
+      attributeResolver(childTemplate)
+    } else {
+      val parent = templateNameToTemplate[parentKey]
+        ?: throw IllegalStateException("Expected template to have parent key $parentKey")
+      val resolvedParent = resolveTemplateWithCombini(
+        parent,
+        templateNameToTemplate, attributeResolver, parentResolver, combiniFunction
+      )
+      combiniFunction(resolvedParent, attributeResolver(childTemplate))
+    }
+  }
+
+  fun <T> combineMaps(
+    parent: Map<String, T>,
+    child: Map<String, T>
+  ): MutableMap<String, T> {
+    val changeableParent = parent.toMutableMap()
+    changeableParent.putAll(child)
+    return changeableParent
+  }
+}
+
+class ConstructableAsset(
+  val type: ConstructableTypes,
+  val definitions: Map<String, AssetTemplateDefinition>
+) {
+
+  fun constructAsset() {
+  }
+}
+
 object DefinitionSupplier {
 
   private val gson = GsonBuilder().setPrettyPrinting().create()
 
-  fun createThemeDefinitions(
-    themeDirectory: Path,
-    masterThemeDirectory: Path
-  ): Map<String, Map<String, ThemeTemplateDefinition>> =
-    Stream.concat(
-      Files.walk(Paths.get(themeDirectory.toString(), "templates")),
-      Files.walk(Paths.get(masterThemeDirectory.toString(), "templates"))
-    )
-      .filter { !Files.isDirectory(it) }
-      .filter { it.fileName.toString().endsWith(".template.json") }
-      .map { Files.newInputStream(it) }
-      .map {
-        gson.fromJson(
-          InputStreamReader(it, StandardCharsets.UTF_8),
-          ThemeTemplateDefinition::class.java
-        )
-      }
-      .collect(
-        Collectors.groupingBy {
-          it.type ?: throw IllegalArgumentException("Expected template ${it.name} to have a type")
-        }
+  fun createCommonAssetsTemplate(
+    buildSourceAssetDirectory: Path,
+    masterThemesDirectory: Path
+  ): ConstructableAssetSupplier =
+    ConstructableAssetSupplier(
+      Stream.concat(
+        Files.walk(Paths.get(buildSourceAssetDirectory.toString(), "templates")),
+        Files.walk(Paths.get(masterThemesDirectory.toString(), "templates"))
       )
-      .entries.associate {
-        it.key to (it.value.associateBy { kv -> kv.name })
-      }
+        .filter { !Files.isDirectory(it) }
+        .filter { it.fileName.toString().endsWith(".template.json") }
+        .map { Files.newInputStream(it) }
+        .map {
+          gson.fromJson(
+            InputStreamReader(it, StandardCharsets.UTF_8),
+            AssetTemplateDefinition::class.java
+          )
+        }
+        .collect(
+          Collectors.groupingBy {
+            it.type ?: throw IllegalArgumentException("Expected template ${it.name} to have a type")
+          }
+        )
+        .entries.associate {
+          it.key to (it.value.associateBy { kv -> kv.name })
+        }
+    )
 
   fun <T : HasId> getAllDokiThemeDefinitions(
     dokiProduct: DokiProduct,

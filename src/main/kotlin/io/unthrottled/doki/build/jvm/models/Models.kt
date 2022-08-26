@@ -19,13 +19,13 @@ class Backgrounds(
   val secondary: Background?
 )
 
-data class ThemeTemplateDefinition(
-  val type: String?,
-  val extends: String?,
+data class AssetTemplateDefinition(
+  val type: String? = null,
+  val extends: String? = null,
   val name: String,
-  val ui: Map<String, Any>?,
-  val icons: Map<String, Any>?,
-  val colors: Map<String, String>?
+  val ui: Map<String, Any>? = null,
+  val icons: Map<String, Any>? = null,
+  val colors: Map<String, String>? = null
 )
 
 data class BuildSticker(
@@ -45,8 +45,8 @@ data class BuildStickers(
 )
 
 data class EditorSchemeOverrides(
-  val colors: Map<String, Any>
-)
+  override val colors: Map<String, String>
+) : HasColors
 
 data class Overrides(
   val editorScheme: EditorSchemeOverrides?
@@ -65,7 +65,11 @@ data class BackgroundsDefinition(
 interface HasId {
   val id: String
 }
+interface HasColors {
+  val colors: Map<String, String>
+}
 
+// todo: move these to the apps they support
 data class JetbrainsAppDefinition(
   override val id: String,
   val editorScheme: Map<String, Any>,
@@ -76,11 +80,12 @@ data class JetbrainsAppDefinition(
   val icons: Map<String, Any>
 ) : HasId
 
+// todo: move these to the apps they support
 data class IconsAppDefinition(
   override val id: String,
   val overrides: Map<String, Any>,
-  val colors: Map<String, String>,
-) : HasId
+  override val colors: Map<String, String>,
+) : HasId, HasColors
 
 data class MasterThemeDefinition(
   val id: String,
@@ -92,9 +97,9 @@ data class MasterThemeDefinition(
   val product: String?,
   val stickers: BuildStickers,
   val overrides: Overrides?,
-  val colors: Map<String, Any>,
+  override val colors: Map<String, String>,
   val meta: Map<String, String>?
-) {
+) : HasColors {
   val usableName: String
     get() = name.replace(' ', '_')
       .replace(":", "")
