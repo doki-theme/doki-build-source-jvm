@@ -1,5 +1,6 @@
 package io.unthrottled.doki.build.jvm.models
 
+typealias StringDictionary<T> = MutableMap<String, T>
 data class SchemaDefinition(
   val required: List<String>?
 )

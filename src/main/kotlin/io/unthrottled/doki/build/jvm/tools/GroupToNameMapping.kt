@@ -51,5 +51,6 @@ object GroupToNameMapping {
     )
 
   fun getLafNamePrefix(groupName: String): String =
-    nameMapping.getOrDefault(groupName, "")
+    nameMapping[groupName]
+      ?: throw IllegalArgumentException("No group to name mapping for $groupName")
 }

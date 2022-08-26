@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.unthrottled.doki.build.jvm.models.AssetTemplateDefinition
 import io.unthrottled.doki.build.jvm.models.HasId
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
+import io.unthrottled.doki.build.jvm.models.StringDictionary
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -41,7 +42,7 @@ class ConstructableAssetSupplier(
 object BuildTools {
   fun <T, R> resolveTemplateWithCombini(
     childTemplate: T,
-    templateNameToTemplate: Map<String, T>,
+    templateNameToTemplate: StringDictionary<T>,
     attributeResolver: (T) -> R,
     parentResolver: (T) -> String?,
     combiniFunction: (R, R) -> R,
@@ -61,9 +62,9 @@ object BuildTools {
   }
 
   fun <T> combineMaps(
-    parent: Map<String, T>,
-    child: Map<String, T>
-  ): MutableMap<String, T> {
+    parent: StringDictionary<T>,
+    child: StringDictionary<T>
+  ): StringDictionary<T> {
     val changeableParent = parent.toMutableMap()
     changeableParent.putAll(child)
     return changeableParent
