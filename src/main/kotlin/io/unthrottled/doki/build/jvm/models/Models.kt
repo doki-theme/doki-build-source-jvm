@@ -1,12 +1,12 @@
 package io.unthrottled.doki.build.jvm.models
 
-typealias StringDictionary<T> = MutableMap<String, T>
+typealias StringDictionary<T> = Map<String, T>
 data class SchemaDefinition(
   val required: List<String>?
 )
 
 data class ThemeDefinitionSchema(
-  val properties: Map<String, SchemaDefinition>
+  val properties: StringDictionary<SchemaDefinition>
 )
 
 class Background(
@@ -24,9 +24,9 @@ data class AssetTemplateDefinition(
   val type: String? = null,
   val extends: String? = null,
   val name: String,
-  val ui: Map<String, Any>? = null,
-  val icons: Map<String, Any>? = null,
-  val colors: Map<String, String>? = null
+  val ui: StringDictionary<Any>? = null,
+  val icons: StringDictionary<Any>? = null,
+  val colors: StringDictionary<String>? = null
 )
 
 data class BuildSticker(
@@ -46,7 +46,7 @@ data class BuildStickers(
 )
 
 data class EditorSchemeOverrides(
-  override val colors: Map<String, String>
+  override val colors: StringDictionary<String>
 ) : HasColors
 
 data class Overrides(
@@ -67,25 +67,25 @@ interface HasId {
   val id: String
 }
 interface HasColors {
-  val colors: Map<String, String>
+  val colors: StringDictionary<String>
 }
 
 // todo: move these to the apps they support
 data class JetbrainsAppDefinition(
   override val id: String,
-  val editorScheme: Map<String, Any>,
+  val editorScheme: StringDictionary<Any>,
   val overrides: Overrides?,
   val backgrounds: BackgroundsDefinition?,
-  val ui: Map<String, Any>,
+  val ui: StringDictionary<Any>,
   val uiBase: String?,
-  val icons: Map<String, Any>
+  val icons: StringDictionary<Any>
 ) : HasId
 
 // todo: move these to the apps they support
 data class IconsAppDefinition(
   override val id: String,
-  val overrides: Map<String, Any>,
-  override val colors: Map<String, String>,
+  val overrides: StringDictionary<Any>,
+  override val colors: StringDictionary<String>,
 ) : HasId, HasColors
 
 data class MasterThemeDefinition(
@@ -98,8 +98,8 @@ data class MasterThemeDefinition(
   val product: String?,
   val stickers: BuildStickers,
   val overrides: Overrides?,
-  override val colors: Map<String, String>,
-  val meta: Map<String, String>?
+  override val colors: StringDictionary<String>,
+  val meta: StringDictionary<String>?
 ) : HasColors {
   val usableName: String
     get() = name.replace(' ', '_')
@@ -119,8 +119,8 @@ data class JetbrainsThemeDefinition(
   val group: String,
   val stickers: JetbrainsStickers,
   val backgrounds: Backgrounds,
-  val colors: Map<String, Any>,
-  val ui: Map<String, Any>,
-  val icons: Map<String, Any>,
-  val meta: Map<String, String>
+  val colors: StringDictionary<Any>,
+  val ui: StringDictionary<Any>,
+  val icons: StringDictionary<Any>,
+  val meta: StringDictionary<String>
 )
