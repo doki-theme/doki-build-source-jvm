@@ -6,8 +6,8 @@ import java.nio.file.Files.exists
 import java.nio.file.Path
 
 object PathTools {
-  fun ensureExists(path: Path): Path {
-    if (!exists(path) && Files.isDirectory(path)) {
+  fun ensureDirectoryExists(path: Path): Path {
+    if (!exists(path)) {
       createDirectories(path)
     }
     return path
@@ -18,6 +18,7 @@ object PathTools {
       createDirectories(themeDirectory)
     } else {
       Files.walk(themeDirectory)
+        .filter(Files::exists)
         .sorted(Comparator.reverseOrder())
         .forEach(Files::delete)
     }
