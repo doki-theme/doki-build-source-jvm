@@ -11,6 +11,8 @@
 
 name: Build
 on:
+  push:
+    branches: [ main ]
   # Trigger the workflow on any pull request
   pull_request:
 
