@@ -13,12 +13,13 @@ object PathTools {
     return path
   }
 
-  fun cleanDirectory(themeDirectory: Path) {
-    if (Files.notExists(themeDirectory)) {
-      createDirectories(themeDirectory)
+  fun cleanDirectory(directoryToClean: Path) {
+    if (Files.notExists(directoryToClean)) {
+      createDirectories(directoryToClean)
     } else {
-      Files.walk(themeDirectory)
+      Files.walk(directoryToClean)
         .filter(Files::exists)
+        .filter { pathToRemove -> pathToRemove != directoryToClean }
         .sorted(Comparator.reverseOrder())
         .forEach(Files::delete)
     }
