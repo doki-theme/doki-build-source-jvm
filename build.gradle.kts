@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.unthrottled.doki.build.jvm"
-version = "88.0.2"
+version = "88.0.3"
 
 java {
   withSourcesJar()
