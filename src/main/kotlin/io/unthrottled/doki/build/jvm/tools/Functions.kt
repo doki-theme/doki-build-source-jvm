@@ -9,7 +9,7 @@ fun resolveColor(
   val startingTemplateIndex = color.indexOf('&')
   return if (startingTemplateIndex > -1) {
     val lastDelimiter = color.lastIndexOf('&')
-    val namedColor = color.substring(startingTemplateIndex + 1, lastDelimiter + 1)
+    val namedColor = color.substring(startingTemplateIndex + 1, lastDelimiter)
     val namedColorValue = namedColors[namedColor] ?: throw IllegalStateException(
       "Named color: '$namedColor' is not present"
     )
