@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
   testImplementation(kotlin("test"))
-  api("com.google.code.gson:gson:2.10")
+  api("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.test {
