@@ -1,6 +1,7 @@
 package io.unthrottled.doki.build.jvm.tools
 
 import com.google.gson.GsonBuilder
+import com.google.gson.ToNumberPolicy
 import io.unthrottled.doki.build.jvm.models.HasId
 import io.unthrottled.doki.build.jvm.models.MasterThemeDefinition
 import java.io.InputStreamReader
@@ -12,7 +13,9 @@ import java.util.stream.Collectors
 import java.util.stream.Stream
 
 object CommonConstructionFunctions {
-  private val gson = GsonBuilder().setPrettyPrinting().create()
+  private val gson = GsonBuilder()
+    .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+    .setPrettyPrinting().create()
 
   fun <T : HasId> getAllDokiThemeDefinitions(
     dokiProduct: DokiProduct,

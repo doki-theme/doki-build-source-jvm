@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.unthrottled.doki.build.jvm"
-version = "88.0.5"
+version = "88.0.6"
 
 java {
   withSourcesJar()
@@ -30,7 +30,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "1.8"
+  kotlinOptions.jvmTarget = "17"
 }
 
 publishing {

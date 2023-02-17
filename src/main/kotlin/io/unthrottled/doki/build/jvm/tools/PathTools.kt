@@ -1,6 +1,7 @@
 package io.unthrottled.doki.build.jvm.tools
 
 import com.google.gson.GsonBuilder
+import com.google.gson.ToNumberPolicy
 import com.google.gson.reflect.TypeToken
 import java.io.InputStreamReader
 import java.nio.file.Files
@@ -29,6 +30,7 @@ object PathTools {
   }
 
   private val gson = GsonBuilder()
+    .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
     .create()
 
   fun <T> readJSONFromFile(mappingFile: Path, typeToken: TypeToken<T>): T =
