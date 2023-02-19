@@ -12,11 +12,14 @@ object ColorTools {
     if (text == null || !text.startsWith('#')) return false
     return if (text.length != HEX_COLOR_LENGTH_RGB &&
       text.length != HEX_COLOR_LENGTH_RGBA
-    ) false
-    else COLOR_HEX_PATTERN_RGB.matcher(
-      text
-    ).matches() || COLOR_HEX_PATTERN_RGBA.matcher(
-      text
-    ).matches()
+    ) {
+      false
+    } else {
+      COLOR_HEX_PATTERN_RGB.matcher(
+        text
+      ).matches() || COLOR_HEX_PATTERN_RGBA.matcher(
+        text
+      ).matches()
+    }
   }
 }

@@ -47,7 +47,7 @@ object GroupToNameMapping {
       "Don't Toy with me Miss Nagatoro" to "DTWMMN: ",
       "Miscellaneous" to "Misc: ",
       "Yuru Camp" to "YuruCamp: ",
-      "NekoPara" to "NekoPara: ",
+      "NekoPara" to "NekoPara: "
     )
 
   fun getLafNamePrefix(groupName: String): String =

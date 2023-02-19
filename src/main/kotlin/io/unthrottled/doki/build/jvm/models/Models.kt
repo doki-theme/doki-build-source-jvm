@@ -32,7 +32,7 @@ data class AssetTemplateDefinition(
 data class BuildSticker(
   val name: String,
   val anchor: String,
-  val opacity: Int,
+  val opacity: Int
 )
 
 data class JetbrainsStickers(
@@ -85,7 +85,7 @@ data class JetbrainsAppDefinition(
 data class IconsAppDefinition(
   override val id: String,
   val overrides: StringDictionary<Any>,
-  override val colors: StringDictionary<String>,
+  override val colors: StringDictionary<String>
 ) : HasId, HasColors
 
 data class MasterThemeDefinition(
