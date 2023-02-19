@@ -35,7 +35,8 @@ object CommonConstructionFunctions {
           )
         }.collect(
           Collectors.toMap(
-            { it.id }, { it }
+            { it.id },
+            { it }
           )
         )
 

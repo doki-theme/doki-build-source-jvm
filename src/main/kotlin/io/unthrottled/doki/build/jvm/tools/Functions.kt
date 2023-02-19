@@ -4,7 +4,7 @@ import io.unthrottled.doki.build.jvm.models.StringDictionary
 
 fun resolveColor(
   color: String,
-  namedColors: StringDictionary<String>,
+  namedColors: StringDictionary<String>
 ): String {
   val startingTemplateIndex = color.indexOf('&')
   return if (startingTemplateIndex > -1) {
@@ -28,7 +28,7 @@ fun resolveColor(
 
 fun applyNamedColors(
   objectWithNamedColors: StringDictionary<String>,
-  namedColors: StringDictionary<String>,
+  namedColors: StringDictionary<String>
 ): StringDictionary<String> {
   return objectWithNamedColors.entries
     .associate { (key, color) ->

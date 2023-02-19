@@ -10,7 +10,7 @@ object BuildFunctions {
     templateNameToTemplate: StringDictionary<T>,
     attributeResolver: (T) -> R,
     parentResolver: (T) -> List<String>?,
-    combiniFunction: (R, R) -> R,
+    combiniFunction: (R, R) -> R
   ): R {
     val parentTemplateNames = parentResolver(childTemplate)
     return if (parentTemplateNames == null) {
@@ -18,7 +18,7 @@ object BuildFunctions {
     } else {
       val fullParentTemplates = parentTemplateNames
         .mapNotNull {
-          parentTemplateName ->
+            parentTemplateName ->
           templateNameToTemplate[parentTemplateName]
         }
 
@@ -26,14 +26,14 @@ object BuildFunctions {
       // we know what will be overidden in the base/grandparent template
       val combinedParents = fullParentTemplates
         .map {
-          parentTemplate ->
+            parentTemplate ->
           attributeResolver(parentTemplate)
         }
         .reduce(combiniFunction)
 
       val grandParentsToFillOut =
         fullParentTemplates.flatMap {
-          fullParentTemplate ->
+            fullParentTemplate ->
           parentResolver(fullParentTemplate) ?: emptyList()
         }
 
@@ -49,7 +49,7 @@ object BuildFunctions {
           grandParentsToFillOut
             .distinct()
             .map {
-              grandParentToResolve ->
+                grandParentToResolve ->
               val grandParentTemplate = templateNameToTemplate[grandParentToResolve]
                 ?: throw IllegalStateException("Expected template $grandParentToResolve to be present")
               composeTemplateWithCombini(
@@ -64,13 +64,13 @@ object BuildFunctions {
         // apply parent overrides to the base template
         val fullParentTemplate = combiniFunction(
           resolvedBaseTemplate,
-          combinedParents,
+          combinedParents
         )
 
         // apply child overrides to the parent overrides.
         combiniFunction(
           fullParentTemplate,
-          attributeResolver(childTemplate),
+          attributeResolver(childTemplate)
         )
       }
     }
@@ -81,7 +81,7 @@ object BuildFunctions {
     templateNameToTemplate: StringDictionary<T>,
     attributeResolver: (T) -> R,
     parentResolver: (T) -> String?,
-    combiniFunction: (R, R) -> R,
+    combiniFunction: (R, R) -> R
   ): R {
     val parentKey = parentResolver(childTemplate)
     return if (parentKey == null) {
@@ -91,7 +91,10 @@ object BuildFunctions {
         ?: throw IllegalStateException("Expected template to have parent key $parentKey")
       val resolvedParent = resolveTemplateWithCombini(
         parent,
-        templateNameToTemplate, attributeResolver, parentResolver, combiniFunction
+        templateNameToTemplate,
+        attributeResolver,
+        parentResolver,
+        combiniFunction
       )
       combiniFunction(resolvedParent, attributeResolver(childTemplate))
     }
