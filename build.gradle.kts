@@ -5,7 +5,7 @@ plugins {
   id("java-library")
   id("maven-publish")
   // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
-  id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+  id("org.jlleitschuh.gradle.ktlint") version "11.4.1"
 }
 
 group = "io.unthrottled.doki.build.jvm"
