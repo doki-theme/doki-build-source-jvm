@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.21"
+  kotlin("jvm") version "1.9.10"
   id("java-library")
   id("maven-publish")
   // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
